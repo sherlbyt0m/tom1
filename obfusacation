@@ -1,0 +1,88 @@
+step1:
+Enabling obfuscation passes in LLVM requires configuring the build process with the appropriate flags. Here are the general steps to configure LLVM:
+1.Obtain LLVM Source Code: You will need to obtain the source code for the version of LLVM that you wish to build. You can download the source code from the LLVM website.
+
+2.Configure LLVM: Once you have the LLVM source code, you need to configure the build process. This can be done using the cmake command, which is used to generate the build files. Here is an example of a basic configuration command to enable obfuscation passes:
+vbnet
+Copy code
+cmake -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_PROJECTS="clang;llvm" -DLLVM_TARGETS_TO_BUILD="X86" -DLLVM_INCLUDE_EXAMPLES=OFF -DLLVM_INCLUDE_TESTS=OFF -DLLVM_ENABLE_RTTI=ON -DLLVM_OPTIMIZED_TABLEGEN=ON -DLLVM_BUILD_TESTS=OFF -DLLVM_BUILD_EXAMPLES=OFF -DLLVM_ENABLE_ASSERTIONS=ON -DLLVM_USE_LINKER=lld -DCMAKE_CXX_FLAGS="-fno-rtti -fno-exceptions" -DCMAKE_C_FLAGS="-fno-rtti -fno-exceptions" -DLLVM_ENABLE_SPHINX=OFF -DLLVM_ENABLE_DOXYGEN=OFF -DLLVM_ENABLE_WARNINGS=OFF -DLLVM_ENABLE_TERMINFO=OFF -DLLVM_ENABLE_Z3_SOLVER=OFF -DLLVM_ENABLE_LIBCXX=ON -DLLVM_ENABLE_LIBXML2=OFF -DLLVM_ENABLE_LIBEDIT=OFF -DLLVM_ENABLE_LIBPFM=OFF -DLLVM_ENABLE_THREADS=OFF -DCMAKE_INSTALL_PREFIX=/usr/local/llvm-obf
+
+Here are some important flags in this example command:
+-DLLVM_ENABLE_PROJECTS: Specifies the projects to build. Here, we are building both clang and llvm.
+-DLLVM_TARGETS_TO_BUILD: Specifies the target architectures to build. Here, we are building for the X86 architecture.
+-DLLVM_ENABLE_RTTI: Enables runtime type information (RTTI). This is required for some obfuscation passes.
+-DLLVM_ENABLE_ASSERTIONS: Enables assertions, which can help catch errors during development.
+-DCMAKE_CXX_FLAGS and -DCMAKE_C_FLAGS: Specify flags for the C++ and C compilers, respectively. Here, we are disabling RTTI and exceptions, which can improve performance and reduce code size.
+-DCMAKE_INSTALL_PREFIX: Specifies the installation directory for LLVM.
+
+3.Build LLVM: After configuring LLVM, you can build it using the make command. This will build LLVM with the obfuscation passes enabled.
+Once you have built LLVM with the obfuscation passes enabled, you can use the appropriate obfuscation passes when compiling your code. The specific flags and options required will depend on the obfuscation techniques you wish to use.
+
+step2:
+1.Configuring Obfuscator-LLVM involves setting up the build environment and enabling the obfuscation passes. Here are the general steps:
+
+2.Install LLVM: Obfuscator-LLVM is a fork of LLVM, so you need to have LLVM installed on your system first. You can download and install LLVM from the official LLVM website or using a package manager for your operating system.
+
+3.Clone the Obfuscator-LLVM repository: Clone the Obfuscator-LLVM repository from GitHub using the following command:
+bash
+Copy code
+git clone https://github.com/obfuscator-llvm/obfuscator.git
+
+4.Build Obfuscator-LLVM: Navigate to the Obfuscator-LLVM directory and build the code using the following commands:
+bash
+Copy code
+mkdir build
+cd build
+cmake ..
+make
+
+5.Enable obfuscation passes: To enable obfuscation passes, you need to modify the CMake configuration file. Open the CMakeLists.txt file in the Obfuscator-LLVM directory and add the following lines:
+scss
+Copy code
+option(OBFUSCATOR_LLVM "Build obfuscator-llvm" ON)
+if(OBFUSCATOR_LLVM)
+  add_subdirectory(obfuscator-llvm)
+endif()
+
+6.Build LLVM with obfuscation passes: Build LLVM using the following commands:
+bash
+Copy code
+mkdir build-llvm
+cd build-llvm
+cmake -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_ASSERTIONS=ON -DLLVM_TARGETS_TO_BUILD="X86" ../llvm
+make -j4
+Replace "X86" with the appropriate target for your system architecture.
+
+7.Test Obfuscator-LLVM: To test Obfuscator-LLVM, build a sample program using the following command:
+lua
+Copy code
+clang -Xclang -load -Xclang obfuscator-llvm.so -mllvm -fla -mllvm -sub -mllvm -bcf -o test test.c
+This will apply the function-level, instruction-level, and basic-block level obfuscation passes to the "test.c" file and generate an executable named "test".
+
+Note that enabling obfuscation passes can increase the compile time and the size of the executable. It is recommended to test the obfuscation techniques on a small scale before applying them to larger projects.
+
+step3:
+Building OLLVM on Windows 10 involves setting up the build environment and compiling the code using Visual Studio. Here are the general steps:
+1.Install LLVM: Download the LLVM installer for Windows from the official LLVM website and install it on your system.
+
+2.Install Visual Studio: Download and install Visual Studio from the official Microsoft website.
+
+3.Download OLLVM source code: Download the OLLVM source code from the official GitHub repository using Git or download the ZIP file.
+
+4.Build OLLVM: Open the Visual Studio command prompt and navigate to the OLLVM directory. Create a new directory named "build" and navigate to it. Then, run the following command to configure the build:
+vbnet
+Copy code
+cmake -G "Visual Studio 16 2019" -DLLVM_TARGETS_TO_BUILD="X86" -DLLVM_INCLUDE_EXAMPLES=OFF -DLLVM_INCLUDE_TESTS=OFF ..
+Replace "X86" with the appropriate target for your system architecture. This command will generate a Visual Studio solution file in the "build" directory.
+
+5.Open Visual Studio: Open the generated solution file in Visual Studio.
+
+6.Build OLLVM: Build the solution in Release mode.
+
+7.Test OLLVM: To test OLLVM, open a command prompt and navigate to the OLLVM build directory. Then, run the following command to obfuscate a sample program:
+lua
+Copy code
+clang -Xclang -load -Xclang path\to\build\Release\OLLVM.dll -O2 -o test-obfuscated.exe test.c
+Replace "path\to\build" with the path to the OLLVM build directory and "test.c" with the path to the sample program. This will apply the OLLVM obfuscation techniques to the program and generate an obfuscated executable named "test-obfuscated.exe".
+
+Note that OLLVM may not be compatible with all versions of LLVM and may require some modifications to the source code to build and run on Windows. Additionally, obfuscation techniques can have unintended consequences and may cause issues with certain programs or systems. It is important to test the obfuscated code thoroughly before deploying it in a production environment.
